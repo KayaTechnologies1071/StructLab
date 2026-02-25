@@ -1,6 +1,7 @@
 import React from 'react';
 import type { TrussAnalysisResult, Truss } from './types';
 import { Card } from '../../components/ui/Card';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface TrussResultsProps {
     truss: Truss;
@@ -8,22 +9,24 @@ interface TrussResultsProps {
 }
 
 export const TrussResults: React.FC<TrussResultsProps> = ({ results }) => {
+    const { t } = useLanguage();
+
     if (!results) {
         return (
             <div className="text-center text-slate-500 py-10">
-                Run analysis to see results
+                {t('results.runInfo')}
             </div>
         );
     }
 
     return (
         <div className="space-y-4 h-full overflow-y-auto custom-scrollbar">
-            <Card title="Member Internal Forces (Max Abs)">
+            <Card title={t('results.internal')}>
                 <div className="overflow-x-auto">
                     <table className="w-full text-xs text-left">
                         <thead className="text-slate-400 border-b border-slate-700">
                             <tr>
-                                <th className="py-2">Member</th>
+                                <th className="py-2">{t('results.member')}</th>
                                 <th className="py-2 text-right">N (kN)</th>
                                 <th className="py-2 text-right">V (kN)</th>
                                 <th className="py-2 text-right">M (kNm)</th>
@@ -56,12 +59,12 @@ export const TrussResults: React.FC<TrussResultsProps> = ({ results }) => {
                 </div>
             </Card>
 
-            <Card title="Nodal Displacements">
+            <Card title={t('results.displacements')}>
                 <div className="overflow-x-auto">
                     <table className="w-full text-xs text-left">
                         <thead className="text-slate-400 border-b border-slate-700">
                             <tr>
-                                <th className="py-2">Node</th>
+                                <th className="py-2">{t('results.node')}</th>
                                 <th className="py-2 text-right">dx (mm)</th>
                                 <th className="py-2 text-right">dy (mm)</th>
                                 <th className="py-2 text-right">rad (°)</th>

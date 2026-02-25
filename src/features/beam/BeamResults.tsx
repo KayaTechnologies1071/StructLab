@@ -4,11 +4,13 @@ import { Line } from 'react-chartjs-2';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import type { AnalysisResult, Beam } from './types';
 import { Card } from '../../components/ui/Card';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 /** Step-by-step equilibrium equations display */
 const EquilibriumSteps: React.FC<{ beam: Beam; result: AnalysisResult }> = ({ beam, result }) => {
+    const { t } = useLanguage();
     const [open, setOpen] = useState(false);
 
     const L = beam.length;
@@ -51,7 +53,7 @@ const EquilibriumSteps: React.FC<{ beam: Beam; result: AnalysisResult }> = ({ be
                 className="w-full flex items-center gap-2 px-3 py-2 text-[10px] uppercase tracking-wider text-slate-500 hover:text-slate-300 transition-colors"
             >
                 {open ? <ChevronDown size={10} /> : <ChevronRight size={10} />}
-                <span className="font-bold">📐 Adım Adım Denge Denklemleri</span>
+                <span className="font-bold">📐 {t('results.equilibrium')}</span>
             </button>
             {open && (
                 <div className="px-3 pb-3 space-y-2 text-[10px] font-mono">
@@ -110,6 +112,7 @@ interface BeamResultsProps {
 
 
 export const BeamResults: React.FC<BeamResultsProps> = ({ result, beam }) => {
+    const { t } = useLanguage();
     const [animPhase, setAnimPhase] = useState(0);
     const animRef = useRef<number | null>(null);
 
@@ -233,7 +236,7 @@ export const BeamResults: React.FC<BeamResultsProps> = ({ result, beam }) => {
     return (
         <div className="space-y-3">
             {/* Reactions table */}
-            <Card title="Mesnet Tepkileri">
+            <Card title={t('results.reactions')}>
                 <div className="space-y-1">
                     {reactions.map(([id, val]) => (
                         <div key={id} className="flex justify-between items-center text-xs border-b border-slate-800/50 last:border-0 py-1">
@@ -258,7 +261,7 @@ export const BeamResults: React.FC<BeamResultsProps> = ({ result, beam }) => {
 
             {/* Equilibrium check */}
             <div className="bg-slate-900/60 border border-slate-700/30 rounded p-2 text-[10px]">
-                <div className="text-[9px] uppercase tracking-wider text-slate-600 font-bold mb-1.5">⚖️ Denge Kontrolü</div>
+                <div className="text-[9px] uppercase tracking-wider text-slate-600 font-bold mb-1.5">⚖️ {t('results.equilibrium')}</div>
                 <div className="flex justify-between">
                     <span className="text-slate-500">ΣFy = 0</span>
                     <span className={`font-mono ${Math.abs(totalV) < 0.1 ? 'text-emerald-400' : 'text-red-400'}`}>
@@ -287,12 +290,12 @@ export const BeamResults: React.FC<BeamResultsProps> = ({ result, beam }) => {
             </div>
 
             {/* Animated deflection shape */}
-            <Card title="Eğilme Şekli">
+            <Card title={t('results.deflection')}>
                 {renderDeflectionShape()}
             </Card>
 
             {/* V diagram */}
-            <Card title="Kesme Kuvveti (V)">
+            <Card title={t('results.shear')}>
                 <div className="h-28 w-full">
                     <Line
                         data={makeDataset(result.diagrams.map(p => p.shear), 'rgb(6, 182, 212)', 'V')}
@@ -307,7 +310,7 @@ export const BeamResults: React.FC<BeamResultsProps> = ({ result, beam }) => {
             </Card>
 
             {/* M diagram */}
-            <Card title="Eğilme Momenti (M)">
+            <Card title={t('results.moment')}>
                 <div className="h-28 w-full">
                     <Line
                         data={makeDataset(result.diagrams.map(p => p.moment), 'rgb(239, 68, 68)', 'M')}

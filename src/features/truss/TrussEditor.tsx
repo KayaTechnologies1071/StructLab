@@ -3,6 +3,8 @@ import type { Truss, Node, Member, SupportType, TrussLoad } from './types';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Plus, Trash2 } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { Tooltip } from '../../components/ui/Tooltip';
 
 const SliderInput = ({ label, value, min, max, step, unit, onChange }: { label: string, value: number, min: number, max: number, step: number, unit: string, onChange: (v: number) => void }) => {
     return (
@@ -43,6 +45,7 @@ interface TrussEditorProps {
 }
 
 export const TrussEditor: React.FC<TrussEditorProps> = ({ truss, onChange }) => {
+    const { t } = useLanguage();
 
     const addNode = () => {
         const id = (truss.nodes.length + 1).toString();
@@ -110,7 +113,7 @@ export const TrussEditor: React.FC<TrussEditorProps> = ({ truss, onChange }) => 
 
     return (
         <div className="space-y-4 h-full overflow-y-auto pr-2 custom-scrollbar">
-            <Card title="Nodes" action={<Button size="sm" variant="ghost" icon={<Plus size={14} />} onClick={addNode} />}>
+            <Card title={<Tooltip content={t('info.nodes')}>{t('panel.nodes')}</Tooltip>} action={<Button size="sm" variant="ghost" icon={<Plus size={14} />} onClick={addNode} />}>
                 <div className="space-y-2">
                     {truss.nodes.map(node => (
                         <div key={node.id} className="bg-slate-800/50 p-2 rounded border border-slate-700/50">
@@ -125,17 +128,17 @@ export const TrussEditor: React.FC<TrussEditorProps> = ({ truss, onChange }) => 
                                 <label className="text-[10px] text-slate-400">Y: <input className="w-12 bg-slate-900 border border-slate-700 rounded px-1" type="number" value={node.y} onChange={e => updateNode(node.id, { y: Number(e.target.value) })} /></label>
                             </div>
                             <div className="mb-2">
-                                <label className="text-[10px] block text-slate-400">Support</label>
+                                <label className="text-[10px] block text-slate-400"><Tooltip content={t('info.supports')}>{t('support.type')}</Tooltip></label>
                                 <select className="w-full bg-slate-900 border border-slate-700 rounded text-xs p-1" value={node.support} onChange={e => updateNode(node.id, { support: e.target.value as SupportType })}>
-                                    <option value="none">None</option>
-                                    <option value="pinned">Pinned</option>
-                                    <option value="roller">Roller</option>
-                                    <option value="fixed">Fixed</option>
+                                    <option value="none">{t('support.none')}</option>
+                                    <option value="pinned">{t('support.pinned')}</option>
+                                    <option value="roller">{t('support.roller')}</option>
+                                    <option value="fixed">{t('support.fixed')}</option>
                                 </select>
                             </div>
                             {node.support !== 'none' && (
                                 <div className="mb-2">
-                                    <label className="text-[10px] block text-slate-400">Support Angle (°)</label>
+                                    <label className="text-[10px] block text-slate-400"><Tooltip content={t('info.supportAngle')}>{t('support.angle')}</Tooltip></label>
                                     <input
                                         className="w-full bg-slate-900 border border-slate-700 rounded text-xs p-1"
                                         type="number"
@@ -149,7 +152,7 @@ export const TrussEditor: React.FC<TrussEditorProps> = ({ truss, onChange }) => 
                 </div>
             </Card>
 
-            <Card title="Members" action={<Button size="sm" variant="ghost" icon={<Plus size={14} />} onClick={addMember} />}>
+            <Card title={<Tooltip content={t('info.members')}>{t('panel.members')}</Tooltip>} action={<Button size="sm" variant="ghost" icon={<Plus size={14} />} onClick={addMember} />}>
                 <div className="space-y-2">
                     {truss.members.map(member => (
                         <div key={member.id} className="bg-slate-800/50 p-2 rounded border border-slate-700/50 flex flex-col gap-2">
@@ -168,11 +171,11 @@ export const TrussEditor: React.FC<TrussEditorProps> = ({ truss, onChange }) => 
                             </div>
                             <div className="grid grid-cols-2 gap-2 mt-1">
                                 <div className="flex flex-col">
-                                    <label className="text-[9px] text-slate-500 mb-0.5">Area (cm²)</label>
+                                    <label className="text-[9px] text-slate-500 mb-0.5"><Tooltip content={t('info.area')}>Area (cm²)</Tooltip></label>
                                     <input className="bg-slate-900 border border-slate-700 rounded px-1 py-1 text-[10px] text-emerald-200 font-mono" type="number" value={member.area} onChange={e => updateMember(member.id, { area: Number(e.target.value) })} />
                                 </div>
                                 <div className="flex flex-col">
-                                    <label className="text-[9px] text-slate-500 mb-0.5">Inertia (cm⁴)</label>
+                                    <label className="text-[9px] text-slate-500 mb-0.5"><Tooltip content={t('info.inertia')}>{t('beam.inertia')}</Tooltip></label>
                                     <input className="bg-slate-900 border border-slate-700 rounded px-1 py-1 text-[10px] text-emerald-200 font-mono" type="number" value={member.momentOfInertia || 5000} onChange={e => updateMember(member.id, { momentOfInertia: Number(e.target.value) })} />
                                 </div>
                             </div>
@@ -181,7 +184,7 @@ export const TrussEditor: React.FC<TrussEditorProps> = ({ truss, onChange }) => 
                 </div>
             </Card>
 
-            <Card title="Loads" action={<Button size="sm" variant="ghost" icon={<Plus size={14} />} onClick={addLoad} />}>
+            <Card title={<Tooltip content={t('info.loads')}>{t('panel.loads')}</Tooltip>} action={<Button size="sm" variant="ghost" icon={<Plus size={14} />} onClick={addLoad} />}>
                 <div className="space-y-4">
                     {(truss.loads || []).map((load, idx) => {
                         // Helper to find member length for position sliders
@@ -205,10 +208,10 @@ export const TrussEditor: React.FC<TrussEditorProps> = ({ truss, onChange }) => 
                                             value={load.type}
                                             onChange={e => updateLoad(load.id, { type: e.target.value as TrussLoad['type'] })}
                                         >
-                                            <option value="nodal">Nodal (F/M)</option>
-                                            <option value="point">Point (Member)</option>
-                                            <option value="distributed">Distributed (Member)</option>
-                                            <option value="temperature">Temperature</option>
+                                            <option value="nodal">{t('load.point')} (Nodal/F/M)</option>
+                                            <option value="point">{t('load.point')} (Member)</option>
+                                            <option value="distributed">{t('load.distributed')} (Member)</option>
+                                            <option value="temperature">{t('panel.tempLoad')}</option>
                                         </select>
                                     </div>
                                     <button onClick={() => removeLoad(load.id)} className="text-slate-600 hover:text-red-400 absolute right-0 transition-colors">
@@ -218,7 +221,7 @@ export const TrussEditor: React.FC<TrussEditorProps> = ({ truss, onChange }) => 
 
                                 {/* Target Selection */}
                                 <div className="mb-4 flex items-center gap-2">
-                                    <label className="text-[10px] font-bold text-slate-500 uppercase">{load.type === 'nodal' ? 'Target Node' : 'Target Member'}</label>
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase">{load.type === 'nodal' ? t('load.targetNode') : t('load.targetMember')}</label>
                                     <select
                                         className="bg-slate-900 border border-slate-700/80 rounded px-2 py-1 text-[11px] text-blue-300 outline-none flex-1"
                                         value={load.type === 'nodal' ? (load.nodeId || '') : (load.memberId || '')}
@@ -243,15 +246,15 @@ export const TrussEditor: React.FC<TrussEditorProps> = ({ truss, onChange }) => 
 
                                 {(load.type === 'point' || load.type === 'distributed') && (
                                     <>
-                                        <SliderInput label="Magnitude" value={load.magnitude ?? 0} min={-200} max={200} step={1} unit={load.type === 'point' ? 'kN' : 'kN/m'} onChange={v => updateLoad(load.id, { magnitude: v })} />
-                                        <SliderInput label="Angle" value={load.angle ?? 90} min={0} max={360} step={5} unit="°" onChange={v => updateLoad(load.id, { angle: v })} />
+                                        <SliderInput label={t('load.magnitude')} value={load.magnitude ?? 0} min={-200} max={200} step={1} unit={load.type === 'point' ? 'kN' : 'kN/m'} onChange={v => updateLoad(load.id, { magnitude: v })} />
+                                        <SliderInput label={t('load.angle')} value={load.angle ?? 90} min={0} max={360} step={5} unit="°" onChange={v => updateLoad(load.id, { angle: v })} />
                                         {load.type === 'point' && (
-                                            <SliderInput label="Position" value={load.position ?? 0} min={0} max={Math.max(0.1, maxL)} step={0.1} unit="m" onChange={v => updateLoad(load.id, { position: v })} />
+                                            <SliderInput label={t('support.position')} value={load.position ?? 0} min={0} max={Math.max(0.1, maxL)} step={0.1} unit="m" onChange={v => updateLoad(load.id, { position: v })} />
                                         )}
                                         {load.type === 'distributed' && (
                                             <>
-                                                <SliderInput label="Start Pos" value={load.startPosition ?? 0} min={0} max={Math.max(0.1, maxL)} step={0.1} unit="m" onChange={v => updateLoad(load.id, { startPosition: v })} />
-                                                <SliderInput label="End Pos" value={load.endPosition ?? maxL} min={0} max={Math.max(0.1, maxL)} step={0.1} unit="m" onChange={v => updateLoad(load.id, { endPosition: v })} />
+                                                <SliderInput label={t('load.startPos')} value={load.startPosition ?? 0} min={0} max={Math.max(0.1, maxL)} step={0.1} unit="m" onChange={v => updateLoad(load.id, { startPosition: v })} />
+                                                <SliderInput label={t('load.endPos')} value={load.endPosition ?? maxL} min={0} max={Math.max(0.1, maxL)} step={0.1} unit="m" onChange={v => updateLoad(load.id, { endPosition: v })} />
                                             </>
                                         )}
                                     </>
