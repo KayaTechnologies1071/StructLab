@@ -1,7 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
-import type { Beam, AnalysisResult, AnalysisPoint } from './types';
+import type { Beam, AnalysisResult } from './types';
 import { Camera, EyeOff, Eye } from 'lucide-react';
-import { useLanguage } from '../../contexts/LanguageContext';
 import { exportSvgAsPng } from '../../utils/exportImage';
 
 interface BeamVisualizerProps {
@@ -21,7 +20,6 @@ export const BeamVisualizer: React.FC<BeamVisualizerProps> = ({
     results,
     overlay = 'moment',
 }) => {
-    const { t } = useLanguage();
     const [hoverX, setHoverX] = useState<number | null>(null);
     const [showLoads, setShowLoads] = useState(true);
     const [showReactions, setShowReactions] = useState(true);
@@ -29,7 +27,7 @@ export const BeamVisualizer: React.FC<BeamVisualizerProps> = ({
 
     const handleExport = () => {
         if (svgRef.current) {
-            exportSvgAsPng(svgRef.current, `beam_analysis_${overlay} `);
+            exportSvgAsPng(svgRef.current, `beam_analysis_${overlay}`);
         }
     };
     const svgRef = useRef<SVGSVGElement>(null);
@@ -91,7 +89,7 @@ export const BeamVisualizer: React.FC<BeamVisualizerProps> = ({
 
         const toY = (v: number) => baseY - (v / maxAbs) * (diagramH / 2 - 4);
 
-        const polyPoints = pts.map(p => `${toSvgX(p.x)},${toY(values[pts.indexOf(p)])} `).join(' ');
+        const polyPoints = pts.map(p => `${toSvgX(p.x)},${toY(values[pts.indexOf(p)])}`).join(' ');
 
         return (
             <g>
@@ -106,7 +104,7 @@ export const BeamVisualizer: React.FC<BeamVisualizerProps> = ({
                     </linearGradient>
                 </defs>
                 <polygon
-                    points={`${toSvgX(pts[0].x)},${baseY} ${polyPoints} ${toSvgX(pts[pts.length - 1].x)},${baseY} `}
+                    points={`${toSvgX(pts[0].x)},${baseY} ${polyPoints} ${toSvgX(pts[pts.length - 1].x)},${baseY}`}
                     fill={`url(#dg)`}
                     stroke="none"
                 />
@@ -161,10 +159,10 @@ export const BeamVisualizer: React.FC<BeamVisualizerProps> = ({
             if (ry === undefined && !mx) return null;
             const x = toSvgX(s.position);
             return (
-                <g key={`rxn - ${s.id} `}>
+                <g key={`rxn-${s.id}`}>
                     {/* Small upward arrow indicator */}
                     <polygon
-                        points={`${x},${RXNLABEL_Y - 8} ${x - 5},${RXNLABEL_Y - 2} ${x + 5},${RXNLABEL_Y - 2} `}
+                        points={`${x},${RXNLABEL_Y - 8} ${x - 5},${RXNLABEL_Y - 2} ${x + 5},${RXNLABEL_Y - 2}`}
                         fill="#10b981"
                     />
                     {/* Reaction value */}
@@ -195,22 +193,22 @@ export const BeamVisualizer: React.FC<BeamVisualizerProps> = ({
             {/* Overlay selector & Controls */}
             <div className="flex items-center gap-2 px-2 pb-1 min-h-[36px] z-10 overflow-x-auto custom-scrollbar whitespace-nowrap">
                 <div className="flex items-center gap-1 bg-slate-800/60 rounded-md p-1 border border-slate-700/50">
-                    <button onClick={() => setShowLoads(!showLoads)} className={`p - 1 rounded ${showLoads ? 'text-slate-200' : 'text-slate-500'} hover: bg - slate - 700 transition - colors`} title="Yükleri Göster/Gizle">
+                    <button onClick={() => setShowLoads(!showLoads)} className={`p-1 rounded ${showLoads ? 'text-slate-200' : 'text-slate-500'} hover:bg-slate-700 transition-colors`} title="Yükleri Göster/Gizle">
                         {showLoads ? <Eye size={12} /> : <EyeOff size={12} />}
-                        <span className="text-[9px] ml-1 uppercase font-bold">{t('vis.loads')}</span>
+                        <span className="text-[9px] ml-1 uppercase font-bold">Yükler</span>
                     </button>
-                    <button onClick={() => setShowReactions(!showReactions)} className={`p - 1 rounded ${showReactions ? 'text-slate-200' : 'text-slate-500'} hover: bg - slate - 700 transition - colors`} title="Tepkileri Göster/Gizle">
+                    <button onClick={() => setShowReactions(!showReactions)} className={`p-1 rounded ${showReactions ? 'text-slate-200' : 'text-slate-500'} hover:bg-slate-700 transition-colors`} title="Tepkileri Göster/Gizle">
                         {showReactions ? <Eye size={12} /> : <EyeOff size={12} />}
-                        <span className="text-[9px] ml-1 uppercase font-bold">{t('vis.reactions')}</span>
+                        <span className="text-[9px] ml-1 uppercase font-bold">Tepkiler</span>
                     </button>
-                    <button onClick={() => setShowDimensions(!showDimensions)} className={`p - 1 rounded ${showDimensions ? 'text-slate-200' : 'text-slate-500'} hover: bg - slate - 700 transition - colors`} title="Ölçüleri Göster/Gizle">
+                    <button onClick={() => setShowDimensions(!showDimensions)} className={`p-1 rounded ${showDimensions ? 'text-slate-200' : 'text-slate-500'} hover:bg-slate-700 transition-colors`} title="Ölçüleri Göster/Gizle">
                         {showDimensions ? <Eye size={12} /> : <EyeOff size={12} />}
-                        <span className="text-[9px] ml-1 uppercase font-bold">{t('vis.dimensions')}</span>
+                        <span className="text-[9px] ml-1 uppercase font-bold">Ölçüler</span>
                     </button>
                     <div className="w-px h-3 bg-slate-600 mx-1"></div>
                     <button onClick={handleExport} className="p-1 rounded text-cyan-400 hover:bg-cyan-900/30 hover:text-cyan-300 transition-colors flex items-center gap-1" title="PNG Olarak Kaydet">
                         <Camera size={12} />
-                        <span className="text-[9px] uppercase font-bold">{t('vis.png')}</span>
+                        <span className="text-[9px] uppercase font-bold">PNG</span>
                     </button>
                 </div>
 
@@ -227,7 +225,7 @@ export const BeamVisualizer: React.FC<BeamVisualizerProps> = ({
             <svg
                 ref={svgRef}
                 width="100%"
-                viewBox={`0 0 ${W} ${H} `}
+                viewBox={`0 0 ${W} ${H}`}
                 className="overflow-visible"
                 onMouseMove={handleMouseMove}
                 onMouseLeave={() => setHoverX(null)}
@@ -324,9 +322,9 @@ export const BeamVisualizer: React.FC<BeamVisualizerProps> = ({
                                 const svgX2 = toSvgX(x2);
                                 const midX = (svgX1 + svgX2) / 2;
                                 const seg = (x2 - x).toFixed(2).replace(/\.?0+$/, '');
-                                const segLabel = `${seg} m`;
+                                const segLabel = `${seg}m`;
                                 return (
-                                    <g key={`dim - ${i} `}>
+                                    <g key={`dim-${i}`}>
                                         {/* Segment line */}
                                         <line x1={svgX1 + 1} y1={DIM_Y}
                                             x2={svgX2 - 1} y2={DIM_Y}
@@ -358,13 +356,13 @@ export const BeamVisualizer: React.FC<BeamVisualizerProps> = ({
                             {/* Absolute position labels at each key x */}
                             {sorted.map(x => (
                                 <text
-                                    key={`pos - ${x} `}
+                                    key={`pos-${x}`}
                                     x={toSvgX(x)} y={DIM_Y + TICK_H + 10}
                                     textAnchor="middle"
                                     fill="#334155" fontSize="8"
                                     fontFamily="monospace"
                                 >
-                                    {x === 0 || x === beam.length ? `${x} m` : ''}
+                                    {x === 0 || x === beam.length ? `${x}m` : ''}
                                 </text>
                             ))}
                         </g>
@@ -376,7 +374,7 @@ export const BeamVisualizer: React.FC<BeamVisualizerProps> = ({
                     const x = toSvgX(s.position);
                     return (
                         <g key={s.id} transform={`translate(${x}, ${beamBot})`}>
-                            <g transform={`rotate(${- (s.supportAngle || 0)})`}>
+                            <g transform={`rotate(${-(s.supportAngle || 0)})`}>
                                 {s.type === 'pinned' && (
                                     <>
                                         <polygon points="0,0 -12,18 12,18" fill="#1d4ed8" stroke="#3b82f6" strokeWidth="1.5" />
@@ -445,7 +443,7 @@ export const BeamVisualizer: React.FC<BeamVisualizerProps> = ({
                                         stroke="#ef4444" strokeWidth="3"
                                         markerEnd="url(#arrowLoad)" />
                                     <text x="0" y={-arrowLen - 6} textAnchor="middle"
-                                        transform={`rotate(${- rot} 0 ${- arrowLen - 6})`}
+                                        transform={`rotate(${-rot} 0 ${-arrowLen - 6})`}
                                         fill="#ef4444" fontSize="11" fontWeight="bold" fontFamily="monospace">
                                         {load.magnitude}kN
                                     </text>
@@ -472,7 +470,7 @@ export const BeamVisualizer: React.FC<BeamVisualizerProps> = ({
                         return (
                             <g key={load.id}>
                                 <polygon
-                                    points={`${sx},${beamTop} ${sx},${beamTop - h1} ${ex},${beamTop - h2} ${ex},${beamTop} `}
+                                    points={`${sx},${beamTop} ${sx},${beamTop - h1} ${ex},${beamTop - h2} ${ex},${beamTop}`}
                                     fill="#ef4444" fillOpacity="0.1" />
                                 <line x1={sx} y1={beamTop - h1} x2={ex} y2={beamTop - h2}
                                     stroke="#ef4444" strokeWidth="2" />

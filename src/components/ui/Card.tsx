@@ -2,14 +2,14 @@ import React from 'react';
 
 interface CardProps {
     children: React.ReactNode;
-    title?: React.ReactNode;
+    title?: string;
     className?: string;
     action?: React.ReactNode;
 }
 
 export const Card: React.FC<CardProps> = ({ children, title, action, className = '' }) => {
     return (
-        <div className={`glass - panel p - 4 flex flex - col gap - 3 ${className} `}>
+        <div className={`glass-panel p-4 flex flex-col gap-3 ${className}`}>
             {(title || action) && (
                 <div className="flex items-center justify-between border-b border-slate-700/30 pb-2 mb-1">
                     {title && (

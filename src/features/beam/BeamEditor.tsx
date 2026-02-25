@@ -4,8 +4,6 @@ import { Slider } from '../../components/ui/Slider';
 import { Button } from '../../components/ui/Button';
 import type { Beam, SupportType } from './types';
 import { Plus, Trash2 } from 'lucide-react';
-import { useLanguage } from '../../contexts/LanguageContext';
-import { Tooltip } from '../../components/ui/Tooltip';
 
 interface BeamEditorProps {
     beam: Beam;
@@ -13,7 +11,6 @@ interface BeamEditorProps {
 }
 
 export const BeamEditor: React.FC<BeamEditorProps> = ({ beam, onChange }) => {
-    const { t } = useLanguage();
 
     const updateLength = (len: number) => {
         // Constraint: loads/supports must be within new length
@@ -37,9 +34,9 @@ export const BeamEditor: React.FC<BeamEditorProps> = ({ beam, onChange }) => {
 
     return (
         <div className="space-y-4">
-            <Card title={<Tooltip content={t('info.beamLength')}>{t('panel.geometry')}</Tooltip>}>
+            <Card title="Geometry">
                 <Slider
-                    label={t('beam.length')}
+                    label="Beam Length"
                     value={beam.length}
                     min={1}
                     max={50}
@@ -49,11 +46,11 @@ export const BeamEditor: React.FC<BeamEditorProps> = ({ beam, onChange }) => {
                 <div className="mt-2 text-[10px] text-slate-500">
                     Elastic Modulus (E): {beam.elasticModulus} GPa
                     <br />
-                    {t('beam.inertia')}: {beam.momentOfInertia} cm⁴
+                    Inertia (I): {beam.momentOfInertia} cm⁴
                 </div>
             </Card>
 
-            <Card title={<Tooltip content={t('info.supports')}>{t('panel.supports')}</Tooltip>} action={
+            <Card title="Supports" action={
                 <Button
                     size="sm"
                     variant="ghost"
@@ -78,9 +75,9 @@ export const BeamEditor: React.FC<BeamEditorProps> = ({ beam, onChange }) => {
                                     onChange={(e) => updateSupport(s.id, { type: e.target.value as SupportType })}
                                     className="bg-slate-800 text-xs border border-slate-700 rounded px-1 py-0.5 text-slate-300"
                                 >
-                                    <option value="pinned">{t('support.pinned')}</option>
-                                    <option value="roller">{t('support.roller')}</option>
-                                    <option value="fixed">{t('support.fixed')}</option>
+                                    <option value="pinned">Pinned</option>
+                                    <option value="roller">Roller</option>
+                                    <option value="fixed">Fixed</option>
                                 </select>
                                 <button
                                     className="text-slate-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -94,7 +91,7 @@ export const BeamEditor: React.FC<BeamEditorProps> = ({ beam, onChange }) => {
                             </div>
                         </div>
                         <Slider
-                            label={t('support.position')}
+                            label="Position"
                             value={s.position}
                             min={0}
                             max={beam.length}
@@ -105,7 +102,7 @@ export const BeamEditor: React.FC<BeamEditorProps> = ({ beam, onChange }) => {
                         {/* Settlement Input */}
                         <div className="mt-2 flex items-center gap-2">
                             <label className="text-[10px] uppercase tracking-wider text-amber-500 font-bold w-20 shrink-0">
-                                <Tooltip content={t('info.settlement')}>{t('support.settlement')}</Tooltip>
+                                Settlement
                             </label>
                             <input
                                 type="number"
@@ -119,7 +116,7 @@ export const BeamEditor: React.FC<BeamEditorProps> = ({ beam, onChange }) => {
                         {/* Angle Input */}
                         <div className="mt-2 flex items-center gap-2">
                             <label className="text-[10px] uppercase tracking-wider text-blue-400 font-bold w-20 shrink-0">
-                                <Tooltip content={t('info.supportAngle')}>{t('support.angle')}</Tooltip>
+                                Angle (°)
                             </label>
                             <input
                                 type="number"
@@ -133,7 +130,7 @@ export const BeamEditor: React.FC<BeamEditorProps> = ({ beam, onChange }) => {
                 ))}
             </Card>
 
-            <Card title={<Tooltip content={t('info.hinges')}>{t('panel.hinges')}</Tooltip>} action={
+            <Card title="Hinges (Gerber)" action={
                 <Button
                     size="sm"
                     variant="ghost"
@@ -162,7 +159,7 @@ export const BeamEditor: React.FC<BeamEditorProps> = ({ beam, onChange }) => {
                             </button>
                         </div>
                         <Slider
-                            label={t('support.position')}
+                            label="Position"
                             value={h.position}
                             min={0}
                             max={beam.length}
@@ -179,7 +176,7 @@ export const BeamEditor: React.FC<BeamEditorProps> = ({ beam, onChange }) => {
             </Card>
 
             {/* Temperature Load Card */}
-            <Card title={<Tooltip content={t('info.tempLoad')}>{t('panel.tempLoad')}</Tooltip>}>
+            <Card title="Temperature Load">
                 <div className="space-y-2">
                     <div className="flex items-center gap-2 mb-2">
                         <input
@@ -234,7 +231,7 @@ export const BeamEditor: React.FC<BeamEditorProps> = ({ beam, onChange }) => {
                 </div>
             </Card>
 
-            <Card title={<Tooltip content={t('info.loads')}>{t('panel.loads')}</Tooltip>} action={
+            <Card title="Loads" action={
                 <Button
                     size="sm"
                     variant="ghost"
@@ -273,9 +270,9 @@ export const BeamEditor: React.FC<BeamEditorProps> = ({ beam, onChange }) => {
                                     }}
                                     className="bg-slate-800 text-[10px] border border-slate-700 rounded px-1 py-0.5 text-slate-300"
                                 >
-                                    <option value="point">{t('load.point')}</option>
-                                    <option value="distributed">{t('load.distributed')}</option>
-                                    <option value="moment">{t('load.moment')}</option>
+                                    <option value="point">Point</option>
+                                    <option value="distributed">Dist</option>
+                                    <option value="moment">Moment</option>
                                 </select>
                             </div>
                             <button
@@ -290,7 +287,7 @@ export const BeamEditor: React.FC<BeamEditorProps> = ({ beam, onChange }) => {
                         </div>
                         <div className="mb-2">
                             <div className="flex justify-between items-center mb-1">
-                                <label className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">{t('load.magnitude')}</label>
+                                <label className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">Magnitude</label>
                                 <span className="text-xs text-slate-300 font-mono">
                                     {l.magnitude} {l.type === 'distributed' ? 'kN/m' : 'kN'}
                                 </span>

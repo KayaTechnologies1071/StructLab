@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import type { Truss, TrussAnalysisResult, TrussLoad } from './types';
 import { Camera, EyeOff, Eye } from 'lucide-react';
 import { exportSvgAsPng } from '../../utils/exportImage';
-import { useLanguage } from '../../contexts/LanguageContext';
 
 interface TrussVisualizerProps {
     truss: Truss;
@@ -12,7 +11,6 @@ interface TrussVisualizerProps {
 }
 
 export const TrussVisualizer: React.FC<TrussVisualizerProps> = ({ truss, results }) => {
-    const { t } = useLanguage();
     const [overlay, setOverlay] = useState<'none' | 'axial' | 'shear' | 'moment'>('none');
     const [showLoads, setShowLoads] = useState(true);
     const [showReactions, setShowReactions] = useState(true);
@@ -225,24 +223,24 @@ export const TrussVisualizer: React.FC<TrussVisualizerProps> = ({ truss, results
                 <div className="flex items-center gap-1 bg-slate-800/60 rounded-md p-1 border border-slate-700/50 overflow-x-auto custom-scrollbar whitespace-nowrap max-w-full">
                     <button onClick={() => setShowLoads(!showLoads)} className={`p-1 rounded ${showLoads ? 'text-slate-200' : 'text-slate-500'} hover:bg-slate-700 transition-colors flex items-center`} title="Yükleri Göster/Gizle">
                         {showLoads ? <Eye size={12} /> : <EyeOff size={12} />}
-                        <span className="text-[9px] ml-1 uppercase font-bold">{t('vis.loads')}</span>
+                        <span className="text-[9px] ml-1 uppercase font-bold">Yükler</span>
                     </button>
                     <button onClick={() => setShowReactions(!showReactions)} className={`p-1 rounded ${showReactions ? 'text-slate-200' : 'text-slate-500'} hover:bg-slate-700 transition-colors flex items-center`} title="Tepkileri Göster/Gizle">
                         {showReactions ? <Eye size={12} /> : <EyeOff size={12} />}
-                        <span className="text-[9px] ml-1 uppercase font-bold">{t('vis.reactions')}</span>
+                        <span className="text-[9px] ml-1 uppercase font-bold">Tepkiler</span>
                     </button>
                     <button onClick={() => setShowNodes(!showNodes)} className={`p-1 rounded ${showNodes ? 'text-slate-200' : 'text-slate-500'} hover:bg-slate-700 transition-colors flex items-center`} title="Düğümleri Göster/Gizle">
                         {showNodes ? <Eye size={12} /> : <EyeOff size={12} />}
-                        <span className="text-[9px] ml-1 uppercase font-bold">{t('panel.nodes')}</span>
+                        <span className="text-[9px] ml-1 uppercase font-bold">Düğümler</span>
                     </button>
                     <button onClick={() => setShowDimensions(!showDimensions)} className={`p-1 rounded ${showDimensions ? 'text-slate-200' : 'text-slate-500'} hover:bg-slate-700 transition-colors flex items-center`} title="Ölçüleri Göster/Gizle">
                         {showDimensions ? <Eye size={12} /> : <EyeOff size={12} />}
-                        <span className="text-[9px] ml-1 uppercase font-bold">{t('vis.dimensions')}</span>
+                        <span className="text-[9px] ml-1 uppercase font-bold">Ölçüler</span>
                     </button>
                     <div className="w-px h-3 bg-slate-600 mx-1"></div>
                     <button onClick={handleExport} className="p-1 rounded text-cyan-400 hover:bg-cyan-900/30 hover:text-cyan-300 transition-colors flex items-center gap-1" title="PNG Olarak Kaydet">
                         <Camera size={12} />
-                        <span className="text-[9px] uppercase font-bold">{t('vis.png')}</span>
+                        <span className="text-[9px] uppercase font-bold">PNG</span>
                     </button>
                 </div>
             </div>
