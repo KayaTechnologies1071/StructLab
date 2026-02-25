@@ -81,10 +81,9 @@ const EquilibriumSteps: React.FC<{ beam: Beam; result: AnalysisResult }> = ({ be
                             force = ld.magnitude * (b - a);
                             arm = (a + b) / 2 - refPos;
                         } else if (ld.type === 'moment') { force = 0; arm = 0; }
-                        if (force === 0) return null;
                         return (
                             <div key={i} className="pl-2 border-l border-slate-700 text-slate-400">
-                                {force.toFixed(2)} × {arm.toFixed(2)} = {(force * arm).toFixed(2)} kNm
+                                {force.toFixed(3)} × {arm.toFixed(3)} = {(force * arm).toFixed(3)} kNm
                             </div>
                         );
                     })}
@@ -272,13 +271,13 @@ export const BeamResults: React.FC<BeamResultsProps> = ({ result, beam }) => {
             <div className="grid grid-cols-3 gap-1.5 text-center text-[10px]">
                 <div className="bg-slate-900/60 border border-cyan-900/30 rounded p-2">
                     <div className="text-slate-500 mb-0.5">Max V</div>
-                    <div className="font-mono text-cyan-400 font-bold text-xs">{Math.abs(result.maxShear).toFixed(2)}<span className="text-slate-600 text-[8px]"> kN</span></div>
-                    <div className="text-[8px] text-slate-600 mt-0.5">x={maxShearPt?.x.toFixed(2)}m</div>
+                    <div className="font-mono text-cyan-400 font-bold text-xs">{Math.abs(result.maxShear).toFixed(3)}<span className="text-slate-600 text-[8px]"> kN</span></div>
+                    <div className="text-[8px] text-slate-600 mt-0.5">x={maxShearPt?.x.toFixed(3)}m</div>
                 </div>
                 <div className="bg-slate-900/60 border border-red-900/30 rounded p-2">
                     <div className="text-slate-500 mb-0.5">Max M</div>
-                    <div className="font-mono text-red-400 font-bold text-xs">{Math.abs(result.maxMoment).toFixed(2)}<span className="text-slate-600 text-[8px]"> kNm</span></div>
-                    <div className="text-[8px] text-slate-600 mt-0.5">x={maxMomPt?.x.toFixed(2)}m</div>
+                    <div className="font-mono text-red-400 font-bold text-xs">{Math.abs(result.maxMoment).toFixed(3)}<span className="text-slate-600 text-[8px]"> kNm</span></div>
+                    <div className="text-[8px] text-slate-600 mt-0.5">x={maxMomPt?.x.toFixed(3)}m</div>
                 </div>
                 <div className="bg-slate-900/60 border border-blue-900/30 rounded p-2">
                     <div className="text-slate-500 mb-0.5">Max δ</div>

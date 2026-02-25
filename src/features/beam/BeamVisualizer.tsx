@@ -169,14 +169,14 @@ export const BeamVisualizer: React.FC<BeamVisualizerProps> = ({
                     <text x={x} y={RXNLABEL_Y + 9}
                         textAnchor="middle"
                         fill="#10b981" fontSize="10" fontFamily="monospace" fontWeight="bold">
-                        R{s.id}={(ry ?? 0).toFixed(1)} kN
+                        R{s.id}={(ry ?? 0).toFixed(3)} kN
                     </text>
                     {/* Moment reaction (if any) */}
-                    {mx !== undefined && Math.abs(mx) > 0.01 && (
+                    {mx !== undefined && Math.abs(mx) > 0.001 && (
                         <text x={x} y={RXNLABEL_Y + 22}
                             textAnchor="middle"
                             fill="#a78bfa" fontSize="9" fontFamily="monospace">
-                            M={(mx).toFixed(1)} kNm
+                            M={(mx).toFixed(3)} kNm
                         </text>
                     )}
                 </g>
@@ -214,9 +214,9 @@ export const BeamVisualizer: React.FC<BeamVisualizerProps> = ({
 
                 {hoverPt && overlay !== 'none' && (
                     <div className="ml-auto text-[10px] font-mono text-slate-300 bg-slate-900/80 rounded px-2 py-1 border border-slate-700/50 shadow-sm backdrop-blur-sm">
-                        x={hoverX?.toFixed(2)}m
-                        {overlay === 'moment' && <span className="text-red-400"> | M={hoverPt.moment.toFixed(2)} kNm</span>}
-                        {overlay === 'shear' && <span className="text-cyan-400"> | V={hoverPt.shear.toFixed(2)} kN</span>}
+                        x={hoverX?.toFixed(3)}m
+                        {overlay === 'moment' && <span className="text-red-400"> | M={hoverPt.moment.toFixed(3)} kNm</span>}
+                        {overlay === 'shear' && <span className="text-cyan-400"> | V={hoverPt.shear.toFixed(3)} kN</span>}
                         {overlay === 'deflection' && <span className="text-blue-400"> | δ={(hoverPt.deflection * 1000).toFixed(3)} mm</span>}
                     </div>
                 )}
@@ -374,34 +374,36 @@ export const BeamVisualizer: React.FC<BeamVisualizerProps> = ({
                     const x = toSvgX(s.position);
                     return (
                         <g key={s.id} transform={`translate(${x}, ${beamBot})`}>
-                            {s.type === 'pinned' && (
-                                <>
-                                    <polygon points="0,0 -12,18 12,18" fill="#1d4ed8" stroke="#3b82f6" strokeWidth="1.5" />
-                                    <circle cx="0" cy="0" r="3.5" fill="#93c5fd" stroke="#3b82f6" strokeWidth="1" />
-                                    <line x1="-14" y1="20" x2="14" y2="20" stroke="#3b82f6" strokeWidth="2" />
-                                    {/* Hatch */}
-                                    {[-10, -5, 0, 5, 10].map(i => (
-                                        <line key={i} x1={i} y1={20} x2={i - 5} y2={26}
-                                            stroke="#1e3a5f" strokeWidth="1" />
-                                    ))}
-                                </>
-                            )}
-                            {s.type === 'roller' && (
-                                <>
-                                    <polygon points="0,0 -12,16 12,16" fill="#1d4ed8" stroke="#3b82f6" strokeWidth="1.5" opacity={0.7} />
-                                    <circle cx="0" cy="21" r="5" fill="#1d4ed8" stroke="#3b82f6" strokeWidth="1.5" />
-                                    <line x1="-14" y1="27" x2="14" y2="27" stroke="#3b82f6" strokeWidth="1.5" />
-                                </>
-                            )}
-                            {s.type === 'fixed' && (
-                                <>
-                                    <rect x="-4" y="0" width="8" height="30" fill="#1d4ed8" stroke="#3b82f6" strokeWidth="1" />
-                                    {[-12, -6, 0, 6, 12].map((i, idx) => (
-                                        <line key={idx} x1={i} y1={0} x2={i - 6} y2={8}
-                                            stroke="#3b82f6" strokeWidth="1" opacity={0.7} />
-                                    ))}
-                                </>
-                            )}
+                            <g transform={`rotate(${-(s.supportAngle || 0)})`}>
+                                {s.type === 'pinned' && (
+                                    <>
+                                        <polygon points="0,0 -12,18 12,18" fill="#1d4ed8" stroke="#3b82f6" strokeWidth="1.5" />
+                                        <circle cx="0" cy="0" r="3.5" fill="#93c5fd" stroke="#3b82f6" strokeWidth="1" />
+                                        <line x1="-14" y1="20" x2="14" y2="20" stroke="#3b82f6" strokeWidth="2" />
+                                        {/* Hatch */}
+                                        {[-10, -5, 0, 5, 10].map(i => (
+                                            <line key={i} x1={i} y1={20} x2={i - 5} y2={26}
+                                                stroke="#1e3a5f" strokeWidth="1" />
+                                        ))}
+                                    </>
+                                )}
+                                {s.type === 'roller' && (
+                                    <>
+                                        <polygon points="0,0 -12,16 12,16" fill="#1d4ed8" stroke="#3b82f6" strokeWidth="1.5" opacity={0.7} />
+                                        <circle cx="0" cy="21" r="5" fill="#1d4ed8" stroke="#3b82f6" strokeWidth="1.5" />
+                                        <line x1="-14" y1="27" x2="14" y2="27" stroke="#3b82f6" strokeWidth="1.5" />
+                                    </>
+                                )}
+                                {s.type === 'fixed' && (
+                                    <>
+                                        <rect x="-4" y="0" width="8" height="30" fill="#1d4ed8" stroke="#3b82f6" strokeWidth="1" />
+                                        {[-12, -6, 0, 6, 12].map((i, idx) => (
+                                            <line key={idx} x1={i} y1={0} x2={i - 6} y2={8}
+                                                stroke="#3b82f6" strokeWidth="1" opacity={0.7} />
+                                        ))}
+                                    </>
+                                )}
+                            </g>
                             {/* Settlement indicator */}
                             {(s as any).settlement && Math.abs((s as any).settlement) > 0 && (
                                 <text x={0} y={35} textAnchor="middle" fill="#f59e0b" fontSize="9">

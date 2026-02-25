@@ -6,6 +6,7 @@ export interface Support {
     type: SupportType;
     position: number; // x-coordinate in meters
     settlement?: number; // prescribed vertical displacement (m), downward positive
+    supportAngle?: number; // rotation in degrees for visual and reaction derivation
 }
 
 export interface Hinge {

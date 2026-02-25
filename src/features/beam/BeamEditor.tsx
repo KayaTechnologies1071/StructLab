@@ -17,7 +17,7 @@ export const BeamEditor: React.FC<BeamEditorProps> = ({ beam, onChange }) => {
         onChange({ ...beam, length: len });
     };
 
-    const updateSupport = (id: string, updates: Partial<{ type: SupportType, position: number, settlement: number }>) => {
+    const updateSupport = (id: string, updates: Partial<{ type: SupportType, position: number, settlement: number, supportAngle: number }>) => {
         const newSupports = beam.supports.map(s => s.id === id ? { ...s, ...updates } : s);
         onChange({ ...beam, supports: newSupports });
     };
@@ -112,6 +112,19 @@ export const BeamEditor: React.FC<BeamEditorProps> = ({ beam, onChange }) => {
                                 className="w-20 bg-slate-800 border border-amber-700/40 rounded px-1 py-0.5 text-xs text-right text-amber-200 focus:outline-none focus:border-amber-500"
                             />
                             <span className="text-[10px] text-slate-500">m ↓</span>
+                        </div>
+                        {/* Angle Input */}
+                        <div className="mt-2 flex items-center gap-2">
+                            <label className="text-[10px] uppercase tracking-wider text-blue-400 font-bold w-20 shrink-0">
+                                Angle (°)
+                            </label>
+                            <input
+                                type="number"
+                                step={1}
+                                value={s.supportAngle ?? 0}
+                                onChange={(e) => updateSupport(s.id, { supportAngle: Number(e.target.value) })}
+                                className="w-20 bg-slate-800 border border-blue-700/40 rounded px-1 py-0.5 text-xs text-right text-blue-200 focus:outline-none focus:border-blue-500"
+                            />
                         </div>
                     </div>
                 ))}
