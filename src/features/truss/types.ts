@@ -5,6 +5,7 @@ export interface Node {
     x: number;
     y: number;
     support: SupportType;
+    supportAngle?: number; // In degrees, for inclined supports (especially rollers)
 }
 
 export interface Member {

@@ -133,6 +133,17 @@ export const TrussEditor: React.FC<TrussEditorProps> = ({ truss, onChange }) => 
                                     <option value="fixed">Fixed</option>
                                 </select>
                             </div>
+                            {node.support !== 'none' && (
+                                <div className="mb-2">
+                                    <label className="text-[10px] block text-slate-400">Support Angle (°)</label>
+                                    <input
+                                        className="w-full bg-slate-900 border border-slate-700 rounded text-xs p-1"
+                                        type="number"
+                                        value={node.supportAngle || 0}
+                                        onChange={e => updateNode(node.id, { supportAngle: Number(e.target.value) })}
+                                    />
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>

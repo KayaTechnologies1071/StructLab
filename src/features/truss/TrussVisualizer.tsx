@@ -447,22 +447,24 @@ export const TrussVisualizer: React.FC<TrussVisualizerProps> = ({ truss, results
                 {truss.nodes.map(node => (
                     <g key={node.id} transform={`translate(${toSvgX(node.x)}, ${toSvgY(node.y)})`}>
                         {/* Support Symbols */}
-                        {node.support === 'pinned' && (
-                            <path d="M -8 10 L 0 0 L 8 10 Z M -12 10 L 12 10" fill="none" stroke="#60a5fa" strokeWidth="2" />
-                        )}
-                        {node.support === 'roller' && (
-                            <g>
-                                <circle cx="-5" cy="14" r="3" fill="none" stroke="#60a5fa" />
-                                <circle cx="5" cy="14" r="3" fill="none" stroke="#60a5fa" />
-                                <path d="M -8 10 L 0 0 L 8 10 Z" fill="none" stroke="#60a5fa" strokeWidth="2" />
-                            </g>
-                        )}
-                        {node.support === 'fixed' && (
-                            <g>
-                                <rect x="-2" y="-12" width="4" height="24" fill="#60a5fa" />
-                                <path d="M -2 -10 L -8 -16 M -2 -2 L -8 -8 M -2 6 L -8 0 M -2 14 L -8 8 M -2 22 L -8 16" stroke="#60a5fa" strokeWidth="1" />
-                            </g>
-                        )}
+                        <g transform={`rotate(${-(node.supportAngle || 0)})`}>
+                            {node.support === 'pinned' && (
+                                <path d="M -8 10 L 0 0 L 8 10 Z M -12 10 L 12 10" fill="none" stroke="#60a5fa" strokeWidth="2" />
+                            )}
+                            {node.support === 'roller' && (
+                                <g>
+                                    <circle cx="-5" cy="14" r="3" fill="none" stroke="#60a5fa" />
+                                    <circle cx="5" cy="14" r="3" fill="none" stroke="#60a5fa" />
+                                    <path d="M -8 10 L 0 0 L 8 10 Z" fill="none" stroke="#60a5fa" strokeWidth="2" />
+                                </g>
+                            )}
+                            {node.support === 'fixed' && (
+                                <g>
+                                    <rect x="-2" y="-12" width="4" height="24" fill="#60a5fa" />
+                                    <path d="M -2 -10 L -8 -16 M -2 -2 L -8 -8 M -2 6 L -8 0 M -2 14 L -8 8 M -2 22 L -8 16" stroke="#60a5fa" strokeWidth="1" />
+                                </g>
+                            )}
+                        </g>
 
                         {/* Node Circle */}
                         {showNodes && <circle r="4" fill="#f8fafc" stroke="#1e293b" strokeWidth="2" />}
@@ -515,18 +517,18 @@ export const TrussVisualizer: React.FC<TrussVisualizerProps> = ({ truss, results
                             const rxn = results.reactions[node.id];
                             return (
                                 <g key={`rxn-${node.id}`}>
-                                    {Math.abs(rxn.rx) > 0.01 && (() => {
+                                    {Math.abs(rxn.rx) > 0.001 && (() => {
                                         const dir = rxn.rx > 0 ? 1 : -1;
                                         const len = 35;
                                         const ox = dir > 0 ? -len - 15 : len + 15;
                                         return (
                                             <g>
                                                 <line x1={ox} y1="0" x2={dir * 10} y2="0" stroke="#10b981" strokeWidth="3" markerEnd="url(#rxnArrow)" />
-                                                <text x={ox - dir * 5} y="-5" fill="#10b981" fontSize="11" fontWeight="bold" fontFamily="monospace" textAnchor={dir > 0 ? 'end' : 'start'}>{Math.abs(rxn.rx).toFixed(1)}kN</text>
+                                                <text x={ox - dir * 5} y="-5" fill="#10b981" fontSize="11" fontWeight="bold" fontFamily="monospace" textAnchor={dir > 0 ? 'end' : 'start'}>{Math.abs(rxn.rx).toFixed(3)}kN</text>
                                             </g>
                                         );
                                     })()}
-                                    {Math.abs(rxn.ry) > 0.01 && (() => {
+                                    {Math.abs(rxn.ry) > 0.001 && (() => {
                                         const dir = rxn.ry > 0 ? 1 : -1;
                                         const len = 35;
                                         // Ry > 0 means support pushes UP. SVG up is -y.
@@ -535,17 +537,17 @@ export const TrussVisualizer: React.FC<TrussVisualizerProps> = ({ truss, results
                                         return (
                                             <g>
                                                 <line x1="0" y1={oy} x2="0" y2={dir > 0 ? 10 : -10} stroke="#10b981" strokeWidth="3" markerEnd="url(#rxnArrow)" />
-                                                <text x="8" y={oy + (dir > 0 ? 10 : -5)} fill="#10b981" fontSize="11" fontWeight="bold" fontFamily="monospace" textAnchor="start">{Math.abs(rxn.ry).toFixed(1)}kN</text>
+                                                <text x="8" y={oy + (dir > 0 ? 10 : -5)} fill="#10b981" fontSize="11" fontWeight="bold" fontFamily="monospace" textAnchor="start">{Math.abs(rxn.ry).toFixed(3)}kN</text>
                                             </g>
                                         );
                                     })()}
-                                    {Math.abs(rxn.rm) > 0.01 && (
+                                    {Math.abs(rxn.rm) > 0.001 && (
                                         <g>
                                             <path
                                                 d={rxn.rm > 0 ? "M 20 0 A 20 20 0 0 1 -20 0" : "M -20 0 A 20 20 0 0 1 20 0"}
                                                 fill="none" stroke="#10b981" strokeWidth="2.5" markerEnd="url(#rxn-moment-arrow)"
                                             />
-                                            <text x={rxn.rm > 0 ? -15 : 25} y="-20" fill="#10b981" fontSize="11" fontWeight="bold" fontFamily="monospace">{Math.abs(rxn.rm).toFixed(1)}kNm</text>
+                                            <text x={rxn.rm > 0 ? -15 : 25} y="-20" fill="#10b981" fontSize="11" fontWeight="bold" fontFamily="monospace">{Math.abs(rxn.rm).toFixed(3)}kNm</text>
                                         </g>
                                     )}
                                 </g>

@@ -40,13 +40,13 @@ export const TrussResults: React.FC<TrussResultsProps> = ({ results }) => {
                                     <tr key={id}>
                                         <td className="py-2 font-mono text-slate-300">M{id}</td>
                                         <td className={`py-2 text-right font-mono ${maxN > 0 ? 'text-blue-400' : maxN < 0 ? 'text-red-400' : 'text-slate-400'}`}>
-                                            {maxN.toFixed(2)}
+                                            {maxN.toFixed(3)}
                                         </td>
                                         <td className="py-2 text-right font-mono text-amber-200">
-                                            {Math.abs(maxV) < 0.001 ? '0.00' : maxV.toFixed(2)}
+                                            {Math.abs(maxV) < 0.001 ? '0.000' : maxV.toFixed(3)}
                                         </td>
                                         <td className="py-2 text-right font-mono text-purple-300">
-                                            {Math.abs(maxM) < 0.001 ? '0.00' : maxM.toFixed(2)}
+                                            {Math.abs(maxM) < 0.001 ? '0.000' : maxM.toFixed(3)}
                                         </td>
                                     </tr>
                                 );

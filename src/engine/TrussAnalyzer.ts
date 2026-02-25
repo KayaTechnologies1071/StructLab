@@ -114,8 +114,14 @@ export class TrussAnalyzer {
                 F[dy_i] = 0;
             }
             if (n.support === 'roller') {
-                K[dy_i][dy_i] += PENALTY;
-                F[dy_i] = 0;
+                const angleRad = (n.supportAngle || 0) * Math.PI / 180;
+                const s = Math.sin(angleRad);
+                const c = Math.cos(angleRad);
+
+                K[dx_i][dx_i] += PENALTY * s * s;
+                K[dy_i][dy_i] += PENALTY * c * c;
+                K[dx_i][dy_i] -= PENALTY * s * c;
+                K[dy_i][dx_i] -= PENALTY * s * c;
             }
             if (n.support === 'fixed') {
                 K[rz_i][rz_i] += PENALTY;
@@ -146,7 +152,11 @@ export class TrussAnalyzer {
                 rx -= Forig[dx_i];
                 ry -= Forig[dy_i];
             } else if (n.support === 'roller') {
-                for (let c = 0; c < dof; c++) ry += Korig[dy_i][c] * d[c];
+                for (let c = 0; c < dof; c++) {
+                    rx += Korig[dx_i][c] * d[c];
+                    ry += Korig[dy_i][c] * d[c];
+                }
+                rx -= Forig[dx_i];
                 ry -= Forig[dy_i];
             }
 
